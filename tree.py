@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 # A partir de un dataframe, lo tomo como conjunto de entrenamiento y entreno
 # un árbol a partir de él
 def train_tree(df):
-  X_train, y_train = df[[0, 1]], df['Class']
+  X_train, y_train = df.iloc[:,:-1], df.iloc[:, -1]
   clf = DecisionTreeClassifier(criterion="entropy",min_impurity_decrease=0.005,random_state=0,min_samples_leaf=5)
   clf.fit(X_train, y_train)
 
@@ -18,10 +18,10 @@ def train_tree(df):
 # A partir de un conjunto de datos y un árbol de decisión, predigo sobre 
 # el conjunto dado
 def predict_tree(df_test, clf):
-  X_test = df_test[[0, 1]]
+  X_test = df_test.iloc[:,:-1]
   predict = clf.predict(X_test)
   df_predict = df_test.copy(deep = True)
-  df_predict['Class'] = predict
+  df_predict.iloc[:, -1] = predict
   return df_predict
 
 # Defino una función para graficar la cantidad de nodos de los árboles resultantes
@@ -30,10 +30,10 @@ def graph_nodes_count(count_df):
   fig, ax = plt.subplots(figsize=(10, 10))
 
   colors = ["blue", "orange"]
-  classes = pd.unique(count_df['Class'])
+  classes = pd.unique(count_df.iloc[:, -1])
 
   for (p, c) in zip(classes, colors):
-   df = count_df[count_df['Class'] == p]
+   df = count_df[count_df.iloc[:, -1] == p]
    df = df.groupby('n').mean()
    df = df.reset_index()
    plt.plot(df['n'], df['Nodes'], color=c, marker='o')

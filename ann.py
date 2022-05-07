@@ -11,16 +11,16 @@ from warnings import simplefilter
 from sklearn.exceptions import ConvergenceWarning
 simplefilter("ignore", category=ConvergenceWarning)
 
-def create_net_classifier(N2, eta, alfa, epochs):
+def create_net_classifier(N2, eta, alfa, epochs, gamma = 0.0):
   classif = MLPClassifier(hidden_layer_sizes=(N2,), activation='logistic', 
-                       solver='sgd', alpha=0.0, batch_size=1, learning_rate='constant', 
+                       solver='sgd', alpha=gamma, batch_size=1, learning_rate='constant', 
                        learning_rate_init=eta,momentum=alfa,nesterovs_momentum=False,
                        tol=0.0,warm_start=True,max_iter=epochs)
   return classif
 
-def create_net_regressor(N2, eta, alfa, epochs):
+def create_net_regressor(N2, eta, alfa, epochs, gamma = 0.0):
   regr = MLPRegressor(hidden_layer_sizes=(N2,), activation='logistic', 
-                    solver='sgd', alpha=0.0, batch_size=1, learning_rate='constant', 
+                    solver='sgd', alpha=gamma, batch_size=1, learning_rate='constant', 
                     learning_rate_init=eta,momentum=alfa,nesterovs_momentum=False,
                     tol=0.0,warm_start=True,max_iter=epochs)
   return regr

@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Defino una función más general a la pedida para no repetir código, luego
-# defino funciones más específicas con lo pedido.
 
 # Función para generar n puntos d-dimensionales provenientes de una distribución
 # normal con desviación estándar igual a std, devuelve un dataframe con
@@ -166,8 +164,8 @@ def graph_df(df, title):
 
 # Defino una función para graficar los errores de las predicciones sobre los
 # conjuntos de entrenamiento y test
-def graph_errors(errors_df, which):
-  fig, ax = plt.subplots(figsize=(10, 10))
+def graph_errors(errors_df, which, width = 15, height = 10):
+  fig, ax = plt.subplots(figsize=(width, height))
 
   colors = ["blue", "orange", "green", "red", "magenta", "purple"]
   classes = pd.unique(errors_df['Class'])
@@ -184,9 +182,23 @@ def graph_errors(errors_df, which):
   plt.xlabel(which, size=14, labelpad=15)
   plt.ylabel('Error', size=14, labelpad=15)
 
+def graph_weights(weights_df, which, width = 15, height = 10):
+  fig, ax = plt.subplots(figsize=(width, height))
+  ax.grid(which='both', color='grey', linewidth=1, linestyle='-', alpha=0.2)
+  plt.plot(weights_df[which], weights_df['Pesos'], label="Weight", linestyle="-")
+  plt.xlabel('Épocas', size=14, labelpad=15)
+  plt.ylabel('Suma de los valores al cuadrado de todos los pesos en la red', size=14, labelpad=15)
+  plt.legend()
+  plt.show()
 
+# Función definida como clasificador de mínimo error
+# Recibe un dataframe y dos centros, para cada punto si
+# se encuentra más cerca del center0 que del center1 lo clasifica
+# en la clase 0 y viceversa.
 def optimal_classifier(df_test, center0, center1):
+  # Copio el dataframe original para no modificarlo
   df_optimal = df_test.copy(deep = True)
+  # Obtengo la lista de puntos
   points_list = df_test.drop('Class', axis = 1).values.tolist()
 
   classes = []
@@ -195,9 +207,11 @@ def optimal_classifier(df_test, center0, center1):
   center1 = np.array(center1)
 
   for point in [np.array(p) for p in points_list]:
+    # Para cada punto obtengo la distancia a los centros dados
     distance0 = np.sqrt(np.sum(np.square(point - center0)))
     distance1 = np.sqrt(np.sum(np.square(point - center1)))
 
+    # Y los clasifico según su cercanía
     if distance0 <= distance1:
       classes.append(0)
     else:
@@ -207,12 +221,14 @@ def optimal_classifier(df_test, center0, center1):
 
   return df_optimal
 
-def optimal_diagonal(df_test, d):
+def optimal_diagonal(df_test):
+  d = df_test.shape[1] - 1
   center0 = [-1] * d
   center1 = [1] * d
   return optimal_classifier(df_test, center0, center1)
 
-def optimal_parallel(df_test, d):
+def optimal_parallel(df_test):
+  d = df_test.shape[1] - 1
   center0 = [1] + ([0] * (d - 1))
   center1 = [-1] + ([0] * (d - 1))
   return optimal_classifier(df_test, center0, center1)
