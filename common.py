@@ -114,7 +114,7 @@ def generate_parallel(d, n, C):
 # a la columna 0 la coordenada x, y a la columna 1 como la coordenada y.
 # Los puntos de la clase 0 se grafican en naranja y los puntos de la clase 1
 # en azul.
-def graph_df(df, title):
+def graph_df(df, title = None):
   # Separo los puntos por clase
   x0, y0 = df[0][df.Class == 0], df[1][df.Class == 0]
   x1, y1 = df[0][df.Class == 1], df[1][df.Class == 1]
@@ -158,23 +158,34 @@ def graph_df(df, title):
 
   ax.legend()
 
-  plt.title(title, size = 14, pad = 10)
+  if title != None:
+    plt.title(title, size = 14, pad = 10)
+
   plt.show()
 
 
 # Defino una función para graficar los errores de las predicciones sobre los
 # conjuntos de entrenamiento y test
-def graph_errors(errors_df, which, width = 15, height = 10):
+def graph_errors(errors_df, which, width = 15, height = 10, title = None):
   fig, ax = plt.subplots(figsize=(width, height))
 
-  colors = ["blue", "orange", "green", "red", "magenta", "purple"]
+  colors = ["blue", "orange", "green", "red", "magenta", "purple", "black", "cyan", "yellow"]
   classes = pd.unique(errors_df['Class'])
 
   for (p, c) in zip(classes, colors):
    df = errors_df[errors_df['Class'] == p]
    df = df.groupby(which).mean()
    df = df.reset_index()
-   plt.plot(df[which], df['Error'], color=c, marker='o')
+   if "train" in p.lower():
+     line = ":"
+   elif "validation" in p.lower():
+     line = "-."
+   else:
+     line = "-"
+   plt.plot(df[which], df['Error'], color=c, linestyle=line)
+
+  if title != None:
+    plt.title(title, size = 14, pad = 10)
 
   ax.grid(which='both', color='grey', linewidth=1, linestyle='-', alpha=0.2)
 
@@ -182,13 +193,17 @@ def graph_errors(errors_df, which, width = 15, height = 10):
   plt.xlabel(which, size=14, labelpad=15)
   plt.ylabel('Error', size=14, labelpad=15)
 
-def graph_weights(weights_df, which, width = 15, height = 10):
+def graph_weights(weights_df, which, width = 15, height = 10, title = None):
   fig, ax = plt.subplots(figsize=(width, height))
   ax.grid(which='both', color='grey', linewidth=1, linestyle='-', alpha=0.2)
   plt.plot(weights_df[which], weights_df['Pesos'], label="Weight", linestyle="-")
   plt.xlabel('Épocas', size=14, labelpad=15)
   plt.ylabel('Suma de los valores al cuadrado de todos los pesos en la red', size=14, labelpad=15)
   plt.legend()
+
+  if title != None:
+    plt.title(title, size = 14, pad = 10)
+
   plt.show()
 
 # Función definida como clasificador de mínimo error
