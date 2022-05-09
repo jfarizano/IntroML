@@ -166,7 +166,7 @@ def graph_df(df, title = None):
 
 # Defino una función para graficar los errores de las predicciones sobre los
 # conjuntos de entrenamiento y test
-def graph_errors(errors_df, which, width = 15, height = 10, title = None):
+def graph_errors(errors_df, which, width = 15, height = 10, title = None, y_lim = None):
   fig, ax = plt.subplots(figsize=(width, height))
 
   colors = ["blue", "orange", "green", "red", "magenta", "purple", "black", "cyan", "yellow"]
@@ -186,6 +186,9 @@ def graph_errors(errors_df, which, width = 15, height = 10, title = None):
 
   if title != None:
     plt.title(title, size = 14, pad = 10)
+
+  if y_lim != None:
+    ax.set(ylim=(0, y_lim))
 
   ax.grid(which='both', color='grey', linewidth=1, linestyle='-', alpha=0.2)
 
