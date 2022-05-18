@@ -120,10 +120,10 @@ def graph_df(df, title = None):
   x1, y1 = df[0][df.Class == 1], df[1][df.Class == 1]
 
   # Calculo los máximos y mínimos para tener límites en x e y del gráfico simétricos
-  xmax, xmin = max(max(x0), max(x1)), min(min(x0), min(x1))
+  xmax, xmin = max(max(x0, default = 0), max(x1, default = 0)), min(min(x0, default = 0), min(x1, default = 0))
   xmax = max(abs(xmax), abs(xmin))
   
-  ymax, ymin = max(max(y0), max(y1)), min(min(y0), min(y1))
+  ymax, ymin = max(max(y0, default = 0), max(y1, default = 0)), min(min(y0, default = 0), min(y1, default = 0))
   ymax = max(abs(ymax), abs(ymin))
 
   xmax = np.ceil(max(xmax, ymax))
@@ -169,7 +169,7 @@ def graph_df(df, title = None):
 def graph_errors(errors_df, which, width = 15, height = 10, title = None, y_lim = None):
   fig, ax = plt.subplots(figsize=(width, height))
 
-  colors = ["blue", "orange", "green", "red", "magenta", "purple", "black", "cyan", "yellow"]
+  colors = ["blue", "orange", "green", "red", "magenta", "purple", "black", "cyan", "saddlebrown", "lime", "indigo", "crimson"]
   classes = pd.unique(errors_df['Class'])
 
   for (p, c) in zip(classes, colors):
@@ -182,6 +182,47 @@ def graph_errors(errors_df, which, width = 15, height = 10, title = None, y_lim 
      line = "-."
    else:
      line = "-"
+   plt.plot(df[which], df['Error'], color=c, linestyle=line)
+
+  if title != None:
+    plt.title(title, size = 14, pad = 10)
+
+  if y_lim != None:
+    ax.set(ylim=(0, y_lim))
+
+  ax.grid(which='both', color='grey', linewidth=1, linestyle='-', alpha=0.2)
+
+  plt.legend(classes, ncol = 4)
+  plt.xlabel(which, size=14, labelpad=15)
+  plt.ylabel('Error', size=14, labelpad=15)
+
+def graph_errors_dimensions(errors_df, which ="d", width = 15, height = 10, title = None, y_lim = None):
+  fig, ax = plt.subplots(figsize=(width, height))
+
+  dict = {}
+
+  colors = ["blue", "orange", "green", "red", "magenta", "black", "cyan", "purple", "saddlebrown", "lime", "indigo", "crimson"]
+  
+  models = ["Tree", "ANN", "Gaussian NB"]
+
+  count = 0
+  for model in models:
+    for problem in ["diagonal", "parallel"]:
+      dict["{0} - Train {1}".format(model, problem)] = colors[count]
+      dict["{0} - Test {1}".format(model, problem)] = colors[count]
+      count +=1  
+
+  classes = pd.unique(errors_df['Class'])
+
+  for p in classes:
+   df = errors_df[errors_df['Class'] == p]
+   df = df.groupby(which).mean()
+   df = df.reset_index()
+   if "train" in p.lower():
+     line = ":"
+   else:
+     line = "-"
+   c = dict[p]
    plt.plot(df[which], df['Error'], color=c, linestyle=line)
 
   if title != None:
