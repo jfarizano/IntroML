@@ -1,7 +1,10 @@
+from IPython.display import display
+import math
+from copy import deepcopy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+from sklearn.model_selection import train_test_split
 
 # Función para generar n puntos d-dimensionales provenientes de una distribución
 # normal con desviación estándar igual a std, devuelve un dataframe con
