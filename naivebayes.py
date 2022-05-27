@@ -6,7 +6,6 @@ import pandas as pd
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import KBinsDiscretizer
 from sklearn.naive_bayes import CategoricalNB
-from sklearn.metrics import accuracy_score
 
 def train_Categorical_NB(n_bins, X_train, y_train, X_val, y_val, X_test, y_test):
   best_val_error = math.inf

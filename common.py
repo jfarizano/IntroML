@@ -4,6 +4,7 @@ from copy import deepcopy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 # Función para generar n puntos d-dimensionales provenientes de una distribución
@@ -206,7 +207,7 @@ def graph_errors_dimensions(errors_df, which ="d", width = 15, height = 10, titl
 
   colors = ["blue", "orange", "green", "red", "magenta", "black", "cyan", "purple", "saddlebrown", "lime", "indigo", "crimson"]
   
-  models = ["Tree", "ANN", "Gaussian NB"]
+  models = ["Tree", "ANN", "Gaussian NB", "KNN, K = 1", "KNN, K = 3"]
 
   count = 0
   for model in models:
