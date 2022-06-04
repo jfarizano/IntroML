@@ -63,7 +63,7 @@ def train_kneigh_regress(k_values, X_train, y_train, X_val, y_val, X_test, y_tes
 
   return best_knn, best_k, error_train, error_val, error_test
 
-def train_radiusneigh_classif(r_values, X_train, y_train, X_val, y_val, X_test, y_test):
+def train_radiusneigh_classif(r_values, X_train, y_train, X_val, y_val, X_test, y_test, method='uniform'):
   error_train = []
   error_val = []
   error_test = []
@@ -71,7 +71,7 @@ def train_radiusneigh_classif(r_values, X_train, y_train, X_val, y_val, X_test, 
   best_val_error = math.inf
 
   for r in r_values:  
-    knn = RadiusNeighborsClassifier(radius = r)
+    knn = RadiusNeighborsClassifier(radius = r, weights=method)
 
     knn.fit(X_train, y_train)
 
@@ -94,7 +94,7 @@ def train_radiusneigh_classif(r_values, X_train, y_train, X_val, y_val, X_test, 
 
   return best_knn, best_r, error_train, error_val, error_test 
 
-def train_radiusneigh_regress(r_values, X_train, y_train, X_val, y_val, X_test, y_test):
+def train_radiusneigh_regress(r_values, X_train, y_train, X_val, y_val, X_test, y_test, method='uniform'):
   error_train = []
   error_val = []
   error_test = []
@@ -102,7 +102,7 @@ def train_radiusneigh_regress(r_values, X_train, y_train, X_val, y_val, X_test, 
   best_val_error = math.inf
 
   for r in r_values:  
-    knn = RadiusNeighborsRegressor(radius = r)
+    knn = RadiusNeighborsRegressor(radius = r, weights=method)
 
     knn.fit(X_train, y_train)
 
